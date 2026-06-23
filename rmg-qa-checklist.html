@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RMG Site QA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --surface-hover: #f2f2f0;
+  --border: #e4e4e0;
+  --border-strong: #c8c8c2;
+  --text-primary: #1a1a18;
+  --text-secondary: #6b6b65;
+  --text-muted: #9a9a94;
+  --accent: #1f6feb;
+  --accent-bg: #eff6ff;
+  --accent-border: #93c5fd;
+  --success: #16a34a;
+  --success-bg: #f0fdf4;
+  --success-border: #bbf7d0;
+  --danger: #dc2626;
+  --danger-bg: #fef2f2;
+  --danger-border: #fecaca;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --surface-hover: #1c2128;
+    --border: #30363d;
+    --border-strong: #484f58;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --accent: #58a6ff;
+    --accent-bg: #0d2239;
+    --accent-border: #1d4ed8;
+    --success: #3fb950;
+    --success-bg: #0d2818;
+    --success-border: #1a4a2a;
+    --danger: #f85149;
+    --danger-bg: #2d1117;
+    --danger-border: #6e1c1c;
+  }
+}
+
+html { font-family: var(--font-sans); background: var(--bg); color: var(--text-primary); font-size: 15px; line-height: 1.6; }
+body { min-height: 100vh; padding: 2rem 1rem 4rem; display: flex; flex-direction: column; align-items: center; }
+.page { width: 100%; max-width: 720px; }
+
+/* ── Logo / nav header ── */
+.site-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+.logo-row { display: flex; align-items: center; gap: 10px; }
+.logo-mark { width: 30px; height: 30px; background: var(--text-primary); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.logo-mark svg { width: 16px; height: 16px; fill: var(--bg); }
+.logo-name { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); }
+.back-btn { display: none; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); cursor: pointer; border: none; background: none; font-family: var(--font-sans); padding: 4px 0; }
+.back-btn:hover { color: var(--text-primary); }
+.back-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+/* ── Shared buttons ── */
+.btn { height: 36px; padding: 0 14px; border-radius: var(--radius); border: 1px solid var(--border-strong); background: var(--surface); color: var(--text-primary); font-size: 13px; font-weight: 500; font-family: var(--font-sans); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.12s, opacity 0.12s; white-space: nowrap; }
+.btn:hover { background: var(--surface-hover); }
+.btn:active { opacity: 0.75; }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; flex-shrink: 0; }
+.btn-primary { background: var(--success); border-color: var(--success); color: #fff; }
+.btn-primary:hover { opacity: 0.88; background: var(--success); }
+.btn-danger { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger); }
+.btn-danger:hover { opacity: 0.85; background: var(--danger-bg); }
+.btn-ghost { border-color: transparent; background: transparent; }
+.btn-ghost:hover { background: var(--surface-hover); border-color: var(--border); }
+
+/* ══════════════════════════════
+   DASHBOARD VIEW
+══════════════════════════════ */
+#view-dashboard { display: block; }
+#view-checklist { display: none; }
+
+.dash-header { margin-bottom: 1.75rem; }
+.dash-header h1 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+.dash-header p { font-size: 14px; color: var(--text-secondary); }
+
+/* New session form */
+.new-session-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1.5rem; }
+.new-session-card h2 { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; font-size: 11px; }
+.new-session-fields { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
+.field-group { display: flex; flex-direction: column; gap: 4px; }
+.field-group label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+.field-group input { height: 36px; padding: 0 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text-primary); font-size: 14px; font-family: var(--font-sans); transition: border-color 0.15s; }
+.field-group input:focus { outline: none; border-color: var(--accent); }
+.field-group input::placeholder { color: var(--text-muted); }
+
+/* Session list */
+.sessions-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 10px; }
+.sessions-empty { text-align: center; padding: 2.5rem 1rem; color: var(--text-muted); font-size: 14px; border: 1px dashed var(--border); border-radius: var(--radius-lg); }
+.sessions-empty svg { width: 32px; height: 32px; stroke: var(--border-strong); stroke-width: 1.5; fill: none; display: block; margin: 0 auto 10px; }
+
+.session-list { display: flex; flex-direction: column; gap: 8px; }
+
+.session-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 14px 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: border-color 0.15s, background 0.12s; }
+.session-card:hover { border-color: var(--border-strong); background: var(--surface-hover); }
+.session-card.is-complete { border-color: var(--success-border); background: var(--success-bg); }
+
+.session-status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; background: var(--border-strong); }
+.session-card.is-complete .session-status-dot { background: var(--success); }
+.session-card.in-progress .session-status-dot { background: var(--accent); }
+
+.session-info { flex: 1; min-width: 0; }
+.session-name { font-size: 14px; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.session-card.is-complete .session-name { color: var(--success); }
+.session-meta { font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 1px; }
+
+.session-progress-wrap { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.session-mini-bar { width: 80px; height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.session-mini-fill { height: 100%; border-radius: 99px; background: var(--accent); transition: width 0.3s; }
+.session-card.is-complete .session-mini-fill { background: var(--success); }
+.session-pct { font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); min-width: 30px; text-align: right; }
+
+.session-actions { display: flex; gap: 4px; }
+.icon-btn { width: 30px; height: 30px; border-radius: var(--radius); border: 1px solid transparent; background: transparent; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.12s; }
+.icon-btn:hover { background: var(--surface-hover); border-color: var(--border); color: var(--text-primary); }
+.icon-btn.danger:hover { background: var(--danger-bg); border-color: var(--danger-border); color: var(--danger); }
+.icon-btn svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+/* ══════════════════════════════
+   CHECKLIST VIEW
+══════════════════════════════ */
+.checklist-header { margin-bottom: 1.5rem; }
+.checklist-header h1 { font-size: 20px; font-weight: 600; margin-bottom: 2px; }
+.checklist-url { font-size: 13px; color: var(--text-muted); font-family: var(--font-mono); }
+
+.progress-wrap { margin-bottom: 1.5rem; }
+.progress-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.progress-label { font-size: 13px; color: var(--text-secondary); }
+.progress-pct { font-size: 13px; font-weight: 600; color: var(--text-primary); font-family: var(--font-mono); }
+.progress-track { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--success); border-radius: 99px; transition: width 0.3s ease; width: 0%; }
+
+.checklist { display: flex; flex-direction: column; gap: 6px; }
+
+.item-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: border-color 0.15s; }
+.item-card.is-done { border-color: var(--success-border); background: var(--success-bg); }
+
+.item-main { display: flex; align-items: flex-start; gap: 12px; padding: 13px 16px; cursor: pointer; user-select: none; }
+.item-main:hover { background: var(--surface-hover); }
+.item-card.is-done .item-main:hover { background: transparent; }
+
+.item-num { font-size: 11px; font-weight: 500; font-family: var(--font-mono); color: var(--text-muted); min-width: 20px; padding-top: 2px; flex-shrink: 0; }
+
+.chk { width: 20px; height: 20px; border: 1.5px solid var(--border-strong); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; transition: all 0.15s; background: var(--surface); }
+.chk svg { width: 11px; height: 11px; stroke: white; stroke-width: 2.5; fill: none; opacity: 0; transition: opacity 0.15s; }
+.chk.done { background: var(--success); border-color: var(--success); }
+.chk.done svg { opacity: 1; }
+
+.item-body { flex: 1; }
+.item-text { font-size: 14px; color: var(--text-primary); line-height: 1.5; }
+.item-card.is-done .item-text { color: var(--text-muted); text-decoration: line-through; text-decoration-color: var(--success); }
+
+.item-badge { font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); background: var(--bg); border: 1px solid var(--border); border-radius: 99px; padding: 1px 8px; flex-shrink: 0; margin-top: 2px; }
+.item-card.is-done .item-badge { background: var(--success-bg); border-color: var(--success-border); color: var(--success); }
+
+.subitems { border-top: 1px solid var(--border); }
+.item-card.is-done .subitems { border-color: var(--success-border); }
+
+.subitem { display: flex; align-items: flex-start; gap: 10px; padding: 9px 16px 9px 48px; cursor: pointer; user-select: none; border-bottom: 1px solid var(--border); transition: background 0.1s; }
+.subitem:last-child { border-bottom: none; }
+.subitem:hover { background: var(--surface-hover); }
+.item-card.is-done .subitem { border-color: var(--success-border); }
+
+.subitem .chk { width: 16px; height: 16px; margin-top: 2px; }
+.subitem .chk svg { width: 9px; height: 9px; }
+
+.subitem-text { font-size: 13px; color: var(--text-secondary); line-height: 1.5; flex: 1; }
+.subitem.sub-done .subitem-text { color: var(--text-muted); text-decoration: line-through; text-decoration-color: var(--success); }
+.subitem.sub-done .chk { background: var(--success); border-color: var(--success); }
+.subitem.sub-done .chk svg { opacity: 1; }
+
+.checklist-actions { margin-top: 1.5rem; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+/* Sign-off */
+.signoff { margin-top: 1.5rem; border: 1px solid var(--success-border); border-radius: var(--radius-lg); background: var(--success-bg); overflow: hidden; display: none; }
+.signoff-header { padding: 12px 16px; border-bottom: 1px solid var(--success-border); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.signoff-title { font-size: 13px; font-weight: 600; color: var(--success); display: flex; align-items: center; gap: 7px; }
+.signoff-title svg { width: 15px; height: 15px; stroke: var(--success); stroke-width: 2; fill: none; }
+.signoff-body { padding: 16px; }
+.signoff-pre { font-family: var(--font-mono); font-size: 12px; line-height: 1.75; color: var(--text-primary); white-space: pre-wrap; word-break: break-word; }
+
+/* Delete confirm inline */
+.delete-confirm { display: none; align-items: center; gap: 8px; font-size: 12px; color: var(--danger); padding: 6px 8px; background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: var(--radius); }
+.delete-confirm.visible { display: flex; }
+
+@media (max-width: 540px) {
+  .new-session-fields { grid-template-columns: 1fr; }
+  .session-mini-bar { width: 50px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="site-header">
+    <div class="logo-row">
+      <div class="logo-mark">
+        <svg viewBox="0 0 18 18"><rect x="2" y="2" width="6" height="6" rx="1"/><rect x="10" y="2" width="6" height="6" rx="1"/><rect x="2" y="10" width="6" height="6" rx="1"/><rect x="10" y="10" width="6" height="6" rx="1"/></svg>
+      </div>
+      <span class="logo-name">Restaurant Media Group</span>
+    </div>
+    <button class="back-btn" id="back-btn" onclick="goToDashboard()">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+      All sessions
+    </button>
+  </header>
+
+  <!-- ══ DASHBOARD ══ -->
+  <div id="view-dashboard">
+    <div class="dash-header">
+      <h1>Site QA</h1>
+      <p>Start a new QA session or resume an existing one.</p>
+    </div>
+
+    <div class="new-session-card">
+      <h2>New session</h2>
+      <div class="new-session-fields">
+        <div class="field-group">
+          <label for="new-client">Client name</label>
+          <input type="text" id="new-client" placeholder="Client Name" />
+        </div>
+        <div class="field-group">
+          <label for="new-url">Site URL</label>
+          <input type="text" id="new-url" placeholder="Client URL" />
+        </div>
+        <button class="btn btn-primary" onclick="createSession()">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Start
+        </button>
+      </div>
+    </div>
+
+    <div class="sessions-label" id="sessions-label" style="display:none">Active sessions</div>
+    <div id="session-list"></div>
+  </div>
+
+  <!-- ══ CHECKLIST ══ -->
+  <div id="view-checklist">
+    <div class="checklist-header">
+      <h1 id="cl-client-name"></h1>
+      <div class="checklist-url" id="cl-url"></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label" id="progress-label">0 of 32 items complete</span>
+        <span class="progress-pct" id="progress-pct">0%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <div class="checklist" id="checklist"></div>
+
+    <div class="checklist-actions">
+      <button class="btn btn-primary" id="complete-btn" disabled onclick="generateSignoff()">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Generate sign-off
+      </button>
+    </div>
+
+    <div class="signoff" id="signoff">
+      <div class="signoff-header">
+        <div class="signoff-title">
+          <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          QA sign-off ready
+        </div>
+        <button class="btn" id="copy-btn" onclick="copySignoff()" style="height:30px;padding:0 12px;font-size:12px;">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+      <div class="signoff-body">
+        <pre class="signoff-pre" id="signoff-text"></pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+const STORAGE_KEY = 'rmg_qa_sessions';
+
+const ITEMS = [
+  { id: 1, text: "Nav bar collapses to hamburger at tablet and smaller screen sizes", subs: [] },
+  { id: 2, text: "Fonts are consistent across all pages and elements", subs: ["Headings = Primary font","Body text = Secondary font","Buttons / CTAs = Primary font","Form fields and labels = Secondary font","Footer text = Secondary font"] },
+  { id: 3, text: "All page URLs/slugs match the page heading and page title exactly", subs: [] },
+  { id: 4, text: "Buttons are uniform in size, style, and color across all pages (no mixed borders, weights, or colors)", subs: [] },
+  { id: 5, text: "Spacing and padding are consistent between sections and elements across all pages", subs: [] },
+  { id: 6, text: "Sticky header behaves correctly on scroll", subs: ["Shrinks/compresses on scroll","CTA button retains proper contrast in both states","Logo scales down correctly on scroll"] },
+  { id: 7, text: "Footer is complete and properly formatted", subs: ["Address is present","Phone number is present","Hours are present","Social icons are present and linked","Font matches the rest of the site"] },
+  { id: 8, text: "Mobile hamburger icon is centered and properly aligned with the logo", subs: [] },
+  { id: 9, text: "All text/copy is free of typos, misspellings, incorrect capitalization, and extra punctuation", subs: [] },
+  { id: 10, text: "Logo is high quality, correct size, and properly positioned on all screen sizes and in the footer", subs: [] },
+  { id: 11, text: "All links are working and going to the correct pages", subs: ["Nav links","CTA buttons","Social media icons","Footer links"] },
+  { id: 12, text: "Gallery and hero images are current, relevant, and not duplicated across pages", subs: [] },
+  { id: 13, text: "Contact page is properly formatted", subs: ["Address is on one line (or properly broken)","Spacing matches the rest of the site","Fonts match the site","Submit/CTA button color matches brand"] },
+  { id: 14, text: "Menu page sticky category tabs are visible, stay within screen bounds, and stick on scroll", subs: [] },
+  { id: 15, text: "On mobile, all section headings fit on one line (font sized down as needed)", subs: [] },
+  { id: 16, text: "Online ordering (OLO) integration is active and all items are visible and accessible", subs: [] }
+];
+
+let totalItems = 0;
+ITEMS.forEach(item => { totalItems += item.subs.length > 0 ? item.subs.length : 1; });
+
+let activeSessionId = null;
+
+/* ── Storage helpers ── */
+function loadSessions() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch(e) { return {}; }
+}
+function saveSessions(sessions) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+}
+function getSession(id) { return loadSessions()[id] || null; }
+function saveSession(id, data) {
+  const sessions = loadSessions();
+  sessions[id] = data;
+  saveSessions(sessions);
+}
+function deleteSession(id) {
+  const sessions = loadSessions();
+  delete sessions[id];
+  saveSessions(sessions);
+}
+
+function blankState() {
+  const s = {};
+  ITEMS.forEach(item => {
+    if (item.subs.length === 0) s['i' + item.id] = false;
+    else item.subs.forEach((_, si) => { s['i' + item.id + 's' + si] = false; });
+  });
+  return s;
+}
+
+function getDoneCount(state) { return Object.values(state).filter(Boolean).length; }
+function isItemDone(item, state) {
+  if (item.subs.length === 0) return !!state['i' + item.id];
+  return item.subs.every((_, si) => !!state['i' + item.id + 's' + si]);
+}
+
+/* ── Dashboard ── */
+function goToDashboard() {
+  activeSessionId = null;
+  document.getElementById('view-checklist').style.display = 'none';
+  document.getElementById('view-dashboard').style.display = 'block';
+  document.getElementById('back-btn').style.display = 'none';
+  renderDashboard();
+}
+
+function renderDashboard() {
+  const sessions = loadSessions();
+  const ids = Object.keys(sessions).sort((a, b) => (sessions[b].updatedAt || 0) - (sessions[a].updatedAt || 0));
+  const list = document.getElementById('session-list');
+  const label = document.getElementById('sessions-label');
+
+  if (ids.length === 0) {
+    label.style.display = 'none';
+    list.innerHTML = `<div class="sessions-empty">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      No sessions yet. Start one above.
+    </div>`;
+    return;
+  }
+
+  label.style.display = 'block';
+  list.innerHTML = ids.map(id => {
+    const s = sessions[id];
+    const done = getDoneCount(s.state);
+    const pct = Math.round((done / totalItems) * 100);
+    const complete = done >= totalItems;
+    const inProgress = done > 0 && !complete;
+    const date = s.updatedAt ? new Date(s.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+
+    return `<div class="session-card ${complete ? 'is-complete' : inProgress ? 'in-progress' : ''}" onclick="openSession('${id}')">
+      <div class="session-status-dot"></div>
+      <div class="session-info">
+        <div class="session-name">${s.client}</div>
+        <div class="session-meta">${s.url || '—'} · ${date}</div>
+      </div>
+      <div class="session-progress-wrap">
+        <div class="session-mini-bar"><div class="session-mini-fill" style="width:${pct}%"></div></div>
+        <div class="session-pct">${pct}%</div>
+      </div>
+      <div class="session-actions" onclick="event.stopPropagation()">
+        ${complete ? `<button class="icon-btn" title="Copy sign-off" onclick="quickCopySignoff('${id}')"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>` : ''}
+        <button class="icon-btn danger" title="Delete session" onclick="confirmDelete('${id}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg></button>
+      </div>
+    </div>
+    <div class="delete-confirm" id="del-${id}">
+      Delete <strong>${s.client}</strong>?
+      <button class="btn btn-danger" style="height:28px;padding:0 10px;font-size:12px;" onclick="doDelete('${id}')">Delete</button>
+      <button class="btn btn-ghost" style="height:28px;padding:0 10px;font-size:12px;" onclick="cancelDelete('${id}')">Cancel</button>
+    </div>`;
+  }).join('');
+}
+
+function createSession() {
+  const client = document.getElementById('new-client').value.trim();
+  const url = document.getElementById('new-url').value.trim();
+  if (!client) { document.getElementById('new-client').focus(); return; }
+  const id = 'session_' + Date.now();
+  saveSession(id, { client, url, state: blankState(), createdAt: Date.now(), updatedAt: Date.now() });
+  document.getElementById('new-client').value = '';
+  document.getElementById('new-url').value = '';
+  openSession(id);
+}
+
+function confirmDelete(id) {
+  document.getElementById('del-' + id).classList.add('visible');
+}
+function cancelDelete(id) {
+  document.getElementById('del-' + id).classList.remove('visible');
+}
+function doDelete(id) {
+  deleteSession(id);
+  renderDashboard();
+}
+
+/* ── Checklist view ── */
+function openSession(id) {
+  const session = getSession(id);
+  if (!session) return;
+  activeSessionId = id;
+
+  document.getElementById('view-dashboard').style.display = 'none';
+  document.getElementById('view-checklist').style.display = 'block';
+  document.getElementById('back-btn').style.display = 'flex';
+  document.getElementById('signoff').style.display = 'none';
+
+  document.getElementById('cl-client-name').textContent = session.client;
+  document.getElementById('cl-url').textContent = session.url || '';
+
+  renderChecklist(session.state);
+  updateProgress(session.state);
+}
+
+function renderChecklist(state) {
+  const el = document.getElementById('checklist');
+  el.innerHTML = ITEMS.map(item => {
+    const hasSubs = item.subs.length > 0;
+    const doneSubs = hasSubs ? item.subs.filter((_, si) => state['i' + item.id + 's' + si]).length : 0;
+    const itemDone = isItemDone(item, state);
+
+    const chkSVG = `<svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+    const subsHtml = hasSubs ? `<div class="subitems">` + item.subs.map((sub, si) => {
+      const subDone = !!state['i' + item.id + 's' + si];
+      return `<div class="subitem ${subDone ? 'sub-done' : ''}" onclick="toggleSub(${item.id},${si})" role="checkbox" aria-checked="${subDone}" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSub(${item.id},${si})}">
+        <div class="chk ${subDone ? 'done' : ''}">${chkSVG}</div>
+        <span class="subitem-text">${sub}</span>
+      </div>`;
+    }).join('') + `</div>` : '';
+
+    const mainAttrs = hasSubs ? '' : `onclick="toggleItem(${item.id})" role="checkbox" aria-checked="${itemDone}" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleItem(${item.id})}"`;
+    const badgeHtml = hasSubs ? `<span class="item-badge">${doneSubs}/${item.subs.length}</span>` : '';
+
+    return `<div class="item-card ${itemDone ? 'is-done' : ''}" id="card-${item.id}">
+      <div class="item-main" ${mainAttrs}>
+        <span class="item-num">${String(item.id).padStart(2,'0')}</span>
+        <div class="chk ${itemDone ? 'done' : ''}">${chkSVG}</div>
+        <div class="item-body"><span class="item-text">${item.text}</span></div>
+        ${badgeHtml}
+      </div>${subsHtml}
+    </div>`;
+  }).join('');
+}
+
+function getCurrentState() {
+  const session = getSession(activeSessionId);
+  return session ? session.state : blankState();
+}
+
+function persistState(state) {
+  const session = getSession(activeSessionId);
+  if (!session) return;
+  session.state = state;
+  session.updatedAt = Date.now();
+  saveSession(activeSessionId, session);
+}
+
+function toggleItem(id) {
+  const state = getCurrentState();
+  state['i' + id] = !state['i' + id];
+  persistState(state);
+  refreshCard(id, state);
+  updateProgress(state);
+}
+
+function toggleSub(id, si) {
+  const state = getCurrentState();
+  state['i' + id + 's' + si] = !state['i' + id + 's' + si];
+  persistState(state);
+  refreshCard(id, state);
+  updateProgress(state);
+}
+
+function refreshCard(id, state) {
+  const item = ITEMS.find(i => i.id === id);
+  const card = document.getElementById('card-' + id);
+  if (!card) return;
+  const itemDone = isItemDone(item, state);
+
+  card.classList.toggle('is-done', itemDone);
+
+  const mainChk = card.querySelector('.item-main .chk');
+  mainChk.classList.toggle('done', itemDone);
+
+  if (item.subs.length > 0) {
+    const badge = card.querySelector('.item-badge');
+    const doneSubs = item.subs.filter((_, si) => state['i' + id + 's' + si]).length;
+    if (badge) badge.textContent = doneSubs + '/' + item.subs.length;
+    item.subs.forEach((_, si) => {
+      const subEl = card.querySelectorAll('.subitem')[si];
+      if (!subEl) return;
+      const subDone = !!state['i' + id + 's' + si];
+      subEl.classList.toggle('sub-done', subDone);
+      subEl.querySelector('.chk').classList.toggle('done', subDone);
+      subEl.setAttribute('aria-checked', subDone);
+    });
+  }
+}
+
+function updateProgress(state) {
+  const done = getDoneCount(state);
+  const pct = Math.round((done / totalItems) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = done + ' of ' + totalItems + ' items complete';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  document.getElementById('complete-btn').disabled = done < totalItems;
+}
+
+/* ── Sign-off ── */
+function buildSignoffText(sessionId) {
+  const session = getSession(sessionId);
+  if (!session) return '';
+  const now = new Date().toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' });
+  let out = 'RMG SITE QA — SIGN-OFF\n';
+  out += '══════════════════════════════════════\n';
+  out += 'Client : ' + session.client + '\n';
+  out += 'URL    : ' + (session.url || '—') + '\n';
+  out += 'Date   : ' + now + '\n';
+  out += 'Items  : ' + totalItems + '/' + totalItems + ' passed\n';
+  out += '══════════════════════════════════════\n\n';
+  ITEMS.forEach(item => {
+    out += '[✓] ' + item.id + '. ' + item.text + '\n';
+    if (item.subs.length > 0) item.subs.forEach(sub => { out += '    [✓] ' + sub + '\n'; });
+  });
+  out += '\n══════════════════════════════════════\n';
+  out += 'Reviewed by : ________________________\n';
+  out += 'Approved    : ________________________\n';
+  return out;
+}
+
+function generateSignoff() {
+  const text = buildSignoffText(activeSessionId);
+  document.getElementById('signoff-text').textContent = text;
+  document.getElementById('signoff').style.display = 'block';
+  setTimeout(() => document.getElementById('signoff').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+}
+
+function copySignoff() {
+  navigator.clipboard.writeText(document.getElementById('signoff-text').textContent).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> Copied';
+    setTimeout(() => { btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none;flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy'; }, 2000);
+  });
+}
+
+function quickCopySignoff(id) {
+  navigator.clipboard.writeText(buildSignoffText(id));
+}
+
+/* ── Enter key to start session ── */
+document.addEventListener('DOMContentLoaded', () => {
+  ['new-client','new-url'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') createSession(); });
+  });
+  renderDashboard();
+});
+</script>
+</body>
+</html>
