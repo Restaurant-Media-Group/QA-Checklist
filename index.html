@@ -285,22 +285,65 @@ body { min-height: 100vh; padding: 2rem 1rem 4rem; display: flex; flex-direction
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFH2_BBo-bUxUmuW6-L9CRjk_JzzF64MiAFcEF81T1gXly6i9GkNb-zTNfAVMw6ZiSCA/exec';
 
 const ITEMS = [
-  { id: 1, text: "Nav bar collapses to hamburger at tablet and smaller screen sizes", subs: [] },
-  { id: 2, text: "Fonts are consistent across all pages and elements", subs: ["Headings = Primary font","Body text = Secondary font","Buttons / CTAs = Primary font","Form fields and labels = Secondary font","Footer text = Secondary font"] },
-  { id: 3, text: "All page URLs/slugs match the page heading and page title exactly", subs: [] },
-  { id: 4, text: "Buttons are uniform in size, style, and color across all pages (no mixed borders, weights, or colors)", subs: [] },
-  { id: 5, text: "Spacing and padding are consistent between sections and elements across all pages", subs: [] },
-  { id: 6, text: "Sticky header behaves correctly on scroll", subs: ["Shrinks/compresses on scroll","CTA button retains proper contrast in both states","Logo scales down correctly on scroll"] },
-  { id: 7, text: "Footer is complete and properly formatted", subs: ["Address is present","Phone number is present","Hours are present","Social icons are present and linked","Font matches the rest of the site"] },
-  { id: 8, text: "Mobile hamburger icon is centered and properly aligned with the logo", subs: [] },
-  { id: 9, text: "All text/copy is free of typos, misspellings, incorrect capitalization, and extra punctuation", subs: [] },
-  { id: 10, text: "Logo is high quality, correct size, and properly positioned on all screen sizes and in the footer", subs: [] },
-  { id: 11, text: "All links are working and going to the correct pages", subs: ["Nav links","CTA buttons","Social media icons","Footer links"] },
-  { id: 12, text: "Gallery and hero images are current, relevant, and not duplicated across pages", subs: [] },
-  { id: 13, text: "Contact page is properly formatted", subs: ["Address is on one line (or properly broken)","Spacing matches the rest of the site","Fonts match the site","Submit/CTA button color matches brand"] },
-  { id: 14, text: "Menu page sticky category tabs are visible, stay within screen bounds, and stick on scroll", subs: [] },
-  { id: 15, text: "On mobile, all section headings fit on one line (font sized down as needed)", subs: [] },
-  { id: 16, text: "Online ordering (OLO) integration is active and all items are visible and accessible", subs: [] }
+  { id: 1, text: "No spelling or grammar errors", subs: [] },
+  { id: 2, text: "Fonts are consistent across all pages and elements", subs: [
+    "Headings = Primary font",
+    "Body text = Secondary font",
+    "Buttons / CTAs = Primary font",
+    "Form fields and labels = Secondary font",
+    "Footer text = Secondary font"
+  ]},
+  { id: 3, text: "No previous or old site content remains", subs: [] },
+  { id: 4, text: "All images, videos, and icons load correctly and are high quality", subs: [] },
+  { id: 5, text: "All page URLs/slugs match the page heading and page title exactly", subs: [] },
+  { id: 6, text: "Correct logo and brand assets used consistently across all pages", subs: [] },
+  { id: 7, text: "Buttons are uniform in size, style, and color across all pages", subs: [] },
+  { id: 8, text: "Spacing and padding are consistent between sections and elements across all pages", subs: [] },
+  { id: 9, text: "Sticky header behaves correctly on scroll", subs: [
+    "Shrinks/compresses on scroll",
+    "CTA button retains proper contrast in both states",
+    "Logo scales down correctly on scroll"
+  ]},
+  { id: 10, text: "Footer is complete and properly formatted", subs: [
+    "Address is present",
+    "Phone number is present",
+    "Hours are present",
+    "Social icons are present and linked",
+    "Font matches the rest of the site"
+  ]},
+  { id: 11, text: "Mobile hamburger icon is centered and properly aligned with the logo", subs: [] },
+  { id: 12, text: "Logo is correct size and properly positioned on all screen sizes and in the footer", subs: [] },
+  { id: 13, text: "All links are working and going to the correct pages", subs: [
+    "Nav links",
+    "CTA buttons",
+    "Social media icons open the correct profile",
+    "External links open in a new tab",
+    "Footer links"
+  ]},
+  { id: 14, text: "Google Map displays the correct location", subs: [] },
+  { id: 15, text: "Gallery and hero images are current, relevant, and not duplicated across pages", subs: [] },
+  { id: 16, text: "Contact page is properly formatted", subs: [
+    "Address is on one line (or properly broken)",
+    "Spacing matches the rest of the site",
+    "Fonts match the site",
+    "Submit/CTA button color matches brand"
+  ]},
+  { id: 17, text: "All forms submit successfully and route to the correct email address", subs: [
+    "Form submissions arrive in the client's inbox and are not marked as spam",
+    "Form field labels and placeholder text are accurate and clearly named",
+    "Form error messages display correctly for invalid inputs",
+    "ReCaptcha is enabled on all forms"
+  ]},
+  { id: 18, text: "Menu page sticky category tabs are visible, stay within screen bounds, and stick on scroll", subs: [] },
+  { id: 19, text: "On mobile, all section headings fit on one line", subs: [] },
+  { id: 20, text: "Online ordering (OLO) integration is active and all items are visible and accessible", subs: [] },
+  { id: 21, text: "Site is tested and functional across Chrome, Firefox, Safari, and Edge", subs: [] },
+  { id: 22, text: "Favicon is set up and displaying correctly", subs: [] },
+  { id: 23, text: "Cookie consent banner is in place", subs: [] },
+  { id: 24, text: "Website speed tested via Google PageSpeed Insights", subs: [] },
+  { id: 25, text: "Post-Launch: Site submitted to Google Search Console", subs: [] },
+  { id: 26, text: "Post-Launch: XML sitemap submitted to Google", subs: [] },
+  { id: 27, text: "Post-Launch: Google Analytics confirmed tracking site traffic", subs: [] }
 ];
 
 let totalItems = 0;
